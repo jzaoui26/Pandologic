@@ -4,7 +4,7 @@
 
 # Framework - Package
 Blazor - ASP.NET for building interactive web UIs
-EntityFramework
+Dapper
 Radzen.Blazor (UI)
 Serilog
 

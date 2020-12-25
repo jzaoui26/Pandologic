@@ -1,0 +1,84 @@
+﻿@page "/"
+@using Serilog
+@using Pandologic.Contracts;
+@using Pandologic.Entities;
+@using Dapper;
+@using System.Collections.Generic;
+@using System.Data;
+@using System.Threading.Tasks;
+@using Microsoft.EntityFrameworkCore
+@inject IJobTitleManager jobTitleManager
+@inject IJobManager jobManager
+
+<style>
+    .textarea:disabled {
+        color: #212529;
+        background-color: #ffffff;
+    }
+</style>
+    <div class="row">
+        <div class="float-left" Style="width: 250px;">
+
+            <RadzenAutoComplete Data=@jobTitles TextProperty="JobTitleName"  LoadData=@OnLoadData
+                                Style="width: 250px;" Placeholder="Enter a job title" 
+                                Change=@(args => OnChange(args, "AutoComplete"))/>
+        </div>
+        <div Style="margin-left: 10px; ">
+            <RadzenButton  Text="Search" ButtonStyle="ButtonStyle.Secondary" Click=@(args => OnClick())/>
+        </div>
+    </div>
+    <div class="row">
+        <RadzenTextArea Disabled=true  @bind-Value=@listJob Cols="47" Rows="6" />
+    </div>
+
+
+        @code {
+            List<JobTitle> jobTitles;
+            JobTitle jobTitleProgress;
+            string listJob = "";
+
+            void OnChange(object value, string name)
+            {
+                jobTitleProgress = jobTitles.Find(x => x.JobTitleName == value.ToString());
+
+            }
+
+            void OnLoadData(LoadDataArgs args)
+            {
+                
+                listJob = "";
+
+                // verification
+                if (args.Filter.Length <= 1)
+                {
+                    jobTitles = new List<JobTitle>();
+                }
+                else
+                {
+                    jobTitles = jobTitleManager.ListSearch(args.Filter);
+                }
+
+                InvokeAsync(StateHasChanged);
+            }
+
+            void OnClick()
+            {
+                Log.Warning($"clicked");
+
+                if (jobTitleProgress == null)
+                {
+                    listJob = "";
+                    return;
+                }
+
+                List<Job> jobs = jobManager.ListSearch(jobTitleProgress.JobTitleId);
+
+                if(jobs.Count > 0) listJob = "The revelants jobs are:";
+
+                // loop
+                foreach(Job jobOne in jobs)
+                {
+                    listJob += $"\n{jobTitleProgress.JobTitleName} in {jobOne.City}, {jobOne.State}";
+                }
+            }
+        }

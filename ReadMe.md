@@ -19,4 +19,4 @@ With Serilog
 # Publish for standalone
 
 Publish your solution 
-Open the console > Open the browser on https://localhost:5001/
+Open the console > Open the browser on https://localhost:5001/ 

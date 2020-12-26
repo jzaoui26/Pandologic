@@ -3,9 +3,9 @@
 .NET CORE 3.1
 
 # Framework - Package
-Blazor - ASP.NET for building interactive web UIs
-Dapper
-Radzen.Blazor (UI)
+Blazor - ASP.NET for building interactive web UIs<br>
+Dapper<br>
+Radzen.Blazor (UI)<br>
 Serilog
 
 #Rendering 
